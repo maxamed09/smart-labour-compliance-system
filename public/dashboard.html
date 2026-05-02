@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Labour Law Compliance Control Center</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Main navigation">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">LC</span>
+        <div>
+          <strong>LabourControl</strong>
+          <span>Reduced Intrusion</span>
+        </div>
+      </div>
+
+      <nav class="nav-list">
+        <button class="nav-item active" type="button" data-view="overview">Overview</button>
+        <button class="nav-item" type="button" data-view="attendance">Attendance</button>
+        <button class="nav-item" type="button" data-view="employees">Employee Records</button>
+        <button class="nav-item" type="button" data-view="reports">Reports</button>
+        <button class="nav-item" type="button" data-view="controls">Controls</button>
+        <button class="nav-item" type="button" data-view="assess">Assess</button>
+        <button class="nav-item" type="button" data-view="evidence">Evidence</button>
+        <button class="nav-item" type="button" data-view="privacy">Data Minimization</button>
+      </nav>
+
+      <div class="sidebar-panel">
+        <span class="panel-label">Program owner</span>
+        <strong id="programOwner">Loading</strong>
+        <span id="jurisdictionMode">Configurable</span>
+      </div>
+    </aside>
+
+    <div class="workspace">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Labour Law Compliance with Reduced Intrusion</p>
+          <h1>Smart Labour Compliance System</h1>
+        </div>
+        <div class="topbar-actions">
+          <span id="apiStatus" class="status-pill status-muted">Connecting</span>
+          <button id="refreshBtn" class="button secondary" type="button">Refresh</button>
+          <button id="exportBtn" class="button primary" type="button">Export Pack</button>
+          <button id="logoutBtn" class="button secondary" type="button">Log Out</button>
+        </div>
+      </header>
+
+      <main>
+        <section id="overview" class="view active">
+          <div class="metric-grid" id="metricGrid"></div>
+
+          <div class="content-grid two-columns">
+            <section class="surface">
+              <div class="section-heading">
+                <div>
+                  <span class="panel-label">SLCS alerts</span>
+                  <h2>Work hours and wage checks</h2>
+                </div>
+              </div>
+              <div id="labourAlertList" class="alert-list"></div>
+            </section>
+
+            <section class="surface">
+              <div class="section-heading">
+                <div>
+                  <span class="panel-label">Privacy guardrail</span>
+                  <h2>Essential data only</h2>
+                </div>
+              </div>
+              <div id="privacyPosture" class="privacy-compact"></div>
+            </section>
+          </div>
+
+          <div class="content-grid two-columns">
+            <section class="surface">
+              <div class="section-heading">
+                <div>
+                  <span class="panel-label">Current risk</span>
+                  <h2>Control heatmap</h2>
+                </div>
+              </div>
+              <div id="riskChart" class="risk-chart"></div>
+            </section>
+
+            <section class="surface">
+              <div class="section-heading">
+                <div>
+                  <span class="panel-label">Priority queue</span>
+                  <h2>Alerts</h2>
+                </div>
+              </div>
+              <div id="alertList" class="alert-list"></div>
+            </section>
+          </div>
+
+          <section class="surface">
+            <div class="section-heading">
+              <div>
+                <span class="panel-label">Workforce scope</span>
+                <h2>Coverage by department</h2>
+              </div>
+            </div>
+            <div id="departmentGrid" class="department-grid"></div>
+          </section>
+        </section>
+
+        <section id="attendance" class="view">
+          <div class="content-grid form-grid">
+            <section class="surface">
+              <div class="section-heading">
+                <div>
+                  <span class="panel-label">Employee module</span>
+                  <h2>Manual attendance log</h2>
+                </div>
+              </div>
+              <form id="workLogForm" class="form-stack">
+                <label id="workLogEmployeeWrap">
+                  Employee
+                  <select id="workLogEmployee" name="userId" class="input"></select>
+                </label>
+                <div class="field-row">
+                  <label>
+                    Date
+                    <input name="date" class="input" type="date" required />
+                  </label>
+                  <label>
+                    Overtime hours
+                    <input name="overtimeHours" class="input" type="number" min="0" step="0.25" value="0" required />
+                  </label>
+                </div>
+                <div class="field-row">
+                  <label>
+                    Start time
+                    <input name="startTime" class="input" type="time" required />
+                  </label>
+                  <label>
+                    End time
+                    <input name="endTime" class="input" type="time" required />
+                  </label>
+                </div>
+                <label>
+                  Wage paid
+                  <input name="wagePaid" class="input" type="number" min="0" step="0.01" placeholder="Auto-filled from employee rate if blank" />
+                </label>
+                <button class="button primary wide" type="submit">Save Work Log</button>
+              </form>
+            </section>
+
+            <section class="surface">
+              <div class="section-heading">
+                <div>
+                  <span class="panel-label">Personal work summary</span>
+                  <h2>My hours and alerts</h2>
+                </div>
+              </div>
+              <div id="personalSummary" class="summary-grid"></div>
+              <div id="personalWorkLogs" class="worklog-list"></div>
+            </section>
+          </div>
+        </section>
+
+        <section id="employees" class="view">
+          <section class="surface">
+            <div class="section-heading">
+              <div>
+                <span class="panel-label">Employer module</span>
+                <h2>Employee records</h2>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Employee</th>
+                    <th>Department</th>
+                    <th>Hours</th>
+                    <th>Average</th>
+                    <th>Wages</th>
+                    <th>Compliance</th>
+                    <th>Issues</th>
+                  </tr>
+                </thead>
+                <tbody id="employeeTable"></tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+
+        <section id="reports" class="view">
+          <div class="content-grid two-columns">
+            <section class="surface">
+              <div class="section-heading">
+                <div>
+                  <span class="panel-label">Reports and analytics</span>
+                  <h2>Compliance summary</h2>
+                </div>
+              </div>
+              <div id="reportSummary" class="summary-grid"></div>
+            </section>
+
+            <section class="surface">
+              <div class="section-heading">
+                <div>
+                  <span class="panel-label">Violation logs</span>
+                  <h2>Rule-based findings</h2>
+                </div>
+              </div>
+              <div id="violationList" class="worklog-list"></div>
+            </section>
+          </div>
+        </section>
+
+        <section id="controls" class="view">
+          <section class="surface">
+            <div class="section-heading">
+              <div>
+                <span class="panel-label">Configured obligations</span>
+                <h2>Labour compliance controls</h2>
+              </div>
+              <div class="toolbar">
+                <input id="controlSearch" class="input compact" type="search" placeholder="Search controls" />
+                <select id="statusFilter" class="input compact">
+                  <option value="all">All statuses</option>
+                  <option value="compliant">Compliant</option>
+                  <option value="watch">Watch</option>
+                  <option value="at_risk">At risk</option>
+                  <option value="pending">Pending</option>
+                </select>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Control</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Owner</th>
+                    <th>Next review</th>
+                    <th>Data posture</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="controlTable"></tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+
+        <section id="assess" class="view">
+          <div class="content-grid form-grid">
+            <section class="surface">
+              <div class="section-heading">
+                <div>
+                  <span class="panel-label">Assessment</span>
+                  <h2>Record control review</h2>
+                </div>
+              </div>
+              <form id="assessmentForm" class="form-stack">
+                <label>
+                  Control
+                  <select id="assessmentControl" name="controlId" class="input" required></select>
+                </label>
+                <div class="field-row">
+                  <label>
+                    Status
+                    <select name="status" class="input" required>
+                      <option value="compliant">Compliant</option>
+                      <option value="watch">Watch</option>
+                      <option value="at_risk">At risk</option>
+                      <option value="pending">Pending</option>
+                    </select>
+                  </label>
+                  <label>
+                    Next review
+                    <input name="dueDate" class="input" type="date" required />
+                  </label>
+                </div>
+                <label>
+                  Owner
+                  <input name="owner" class="input" type="text" required />
+                </label>
+                <label>
+                  Evidence references
+                  <input name="evidenceRefs" class="input" type="text" placeholder="Comma-separated references" />
+                </label>
+                <label>
+                  Notes
+                  <textarea name="notes" class="input" rows="5" required></textarea>
+                </label>
+                <button class="button primary wide" type="submit">Save Assessment</button>
+              </form>
+            </section>
+
+            <section class="surface">
+              <div class="section-heading">
+                <div>
+                  <span class="panel-label">Selected control</span>
+                  <h2>Minimum necessary data</h2>
+                </div>
+              </div>
+              <div id="selectedControlPanel" class="selected-control"></div>
+            </section>
+          </div>
+        </section>
+
+        <section id="evidence" class="view">
+          <div class="content-grid form-grid">
+            <section class="surface">
+              <div class="section-heading">
+                <div>
+                  <span class="panel-label">Evidence vault</span>
+                  <h2>Add proof pack item</h2>
+                </div>
+              </div>
+              <form id="evidenceForm" class="form-stack">
+                <label>
+                  Title
+                  <input name="title" class="input" type="text" required />
+                </label>
+                <label>
+                  Control
+                  <select id="evidenceControl" name="controlId" class="input" required></select>
+                </label>
+                <div class="field-row">
+                  <label>
+                    Type
+                    <input name="type" class="input" type="text" required />
+                  </label>
+                  <label>
+                    Next review
+                    <input name="nextReview" class="input" type="date" required />
+                  </label>
+                </div>
+                <label>
+                  Source
+                  <input name="source" class="input" type="text" required />
+                </label>
+                <div class="field-row">
+                  <label>
+                    Access
+                    <select name="accessLevel" class="input" required>
+                      <option>Internal</option>
+                      <option>Restricted</option>
+                      <option>Confidential</option>
+                    </select>
+                  </label>
+                  <label>
+                    Personal data
+                    <select name="personalData" class="input" required>
+                      <option>Anonymized</option>
+                      <option>Pseudonymized</option>
+                      <option>Named exceptions only</option>
+                      <option>Minimal</option>
+                    </select>
+                  </label>
+                </div>
+                <label>
+                  Retention
+                  <input name="retention" class="input" type="text" required />
+                </label>
+                <button class="button primary wide" type="submit">Add Evidence</button>
+              </form>
+            </section>
+
+            <section class="surface">
+              <div class="section-heading">
+                <div>
+                  <span class="panel-label">Live records</span>
+                  <h2>Evidence register</h2>
+                </div>
+              </div>
+              <div id="evidenceList" class="evidence-list"></div>
+            </section>
+          </div>
+        </section>
+
+        <section id="privacy" class="view">
+          <div class="content-grid two-columns">
+            <section class="surface">
+              <div class="section-heading">
+                <div>
+                  <span class="panel-label">Privacy by control</span>
+                  <h2>Data minimization matrix</h2>
+                </div>
+              </div>
+              <div id="privacyMatrix" class="privacy-matrix"></div>
+            </section>
+
+            <section class="surface">
+              <div class="section-heading">
+                <div>
+                  <span class="panel-label">System trail</span>
+                  <h2>Audit activity</h2>
+                </div>
+              </div>
+              <div id="auditList" class="audit-list"></div>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="/app.js"></script>
+</body>
+</html>

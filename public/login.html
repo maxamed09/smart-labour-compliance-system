@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log In - LabourControl</title>
+  <link rel="stylesheet" href="/site.css" />
+</head>
+<body class="login-body">
+  <main class="login-layout">
+    <section class="login-aside" aria-label="Login context">
+      <a class="site-brand light" href="/">
+        <span class="brand-mark">LC</span>
+        <span>LabourControl</span>
+      </a>
+      <div>
+        <p class="eyebrow">Secure workspace</p>
+        <h1>Reduced-intrusion labour compliance.</h1>
+        <p>
+          Manage attendance, wage rules, overtime alerts, and compliance evidence without GPS tracking or screen monitoring.
+        </p>
+      </div>
+      <div class="login-highlights" aria-label="Platform safeguards">
+        <div>
+          <strong>9h</strong>
+          <span>Daily limit checks</span>
+        </div>
+        <div>
+          <strong>0</strong>
+          <span>Surveillance feeds</span>
+        </div>
+        <div>
+          <strong>Live</strong>
+          <span>Rule alerts</span>
+        </div>
+      </div>
+      <div class="login-proof">
+        <span>Demo access</span>
+        <div>
+          <strong>Admin</strong>
+          <small>admin@labourcontrol.local</small>
+        </div>
+        <div>
+          <strong>Employee</strong>
+          <small>employee@slcs.local</small>
+        </div>
+        <div>
+          <strong>Password</strong>
+          <small>Compliance@2026</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="login-panel">
+      <div class="form-card auth-card">
+        <div class="auth-card-header">
+          <div>
+            <p class="eyebrow">Account access</p>
+            <h2>Welcome to SLCS</h2>
+          </div>
+          <a class="back-link top-link" href="/">Home</a>
+        </div>
+
+        <div class="auth-switch" role="tablist" aria-label="Authentication mode">
+          <button class="auth-tab active" type="button" data-auth-mode="login">Log In</button>
+          <button class="auth-tab" type="button" data-auth-mode="signup">Create Account</button>
+        </div>
+
+        <form id="loginForm" class="login-form auth-form active" data-auth-panel="login">
+          <label>
+            Email
+            <input class="input" name="email" type="email" autocomplete="username" value="admin@labourcontrol.local" required />
+          </label>
+          <label>
+            Password
+            <input class="input" name="password" type="password" autocomplete="current-password" value="Compliance@2026" required />
+          </label>
+          <button id="loginButton" class="button primary wide" type="submit">Log In</button>
+          <p id="loginMessage" class="form-message" role="status" aria-live="polite"></p>
+        </form>
+
+        <form id="signupForm" class="login-form auth-form" data-auth-panel="signup" hidden>
+          <label>
+            Name
+            <input class="input" name="name" type="text" autocomplete="name" required />
+          </label>
+          <label>
+            Email
+            <input class="input" name="email" type="email" autocomplete="email" required />
+          </label>
+          <div class="field-row">
+            <label>
+              Role
+              <select class="input" name="role" required>
+                <option value="employee">Employee</option>
+                <option value="employer">Employer</option>
+              </select>
+            </label>
+            <label>
+              Password
+              <input class="input" name="password" type="password" autocomplete="new-password" required />
+            </label>
+          </div>
+          <label>
+            Confirm password
+            <input class="input" name="confirmPassword" type="password" autocomplete="new-password" required />
+          </label>
+          <button id="signupButton" class="button primary wide" type="submit">Create Account</button>
+          <p id="signupMessage" class="form-message" role="status" aria-live="polite"></p>
+        </form>
+
+        <p class="auth-note">Only essential attendance and wage data is stored for compliance review.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="/login.js"></script>
+</body>
+</html>

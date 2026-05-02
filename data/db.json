@@ -1,0 +1,484 @@
+{
+  "organization": {
+    "name": "Smart Labour Compliance System",
+    "jurisdictionMode": "Configurable by site and worker type",
+    "programOwner": "People Operations",
+    "privacyOfficer": "Data Protection Lead",
+    "lastUpdated": "2026-04-28"
+  },
+  "labourRules": {
+    "dailyHoursLimit": 9,
+    "weeklyHoursLimit": 48,
+    "regularHoursPerDay": 8,
+    "overtimeLimitPerDay": 2,
+    "minimumHourlyWage": 178
+  },
+  "users": [
+    {
+      "id": "USR-001",
+      "name": "Asha Mehta",
+      "email": "admin@labourcontrol.local",
+      "role": "Compliance Administrator",
+      "passwordSalt": "lc-demo-2026",
+      "passwordHash": "939644aad10e2daf42ed41c8768f925001917ce66618cb974acb24bb9a9f9956",
+      "profile": {
+        "department": "People Operations",
+        "site": "All sites"
+      }
+    },
+    {
+      "id": "USR-EMP-001",
+      "name": "Ravi Kumar",
+      "email": "employee@slcs.local",
+      "role": "employee",
+      "passwordSalt": "lc-demo-2026",
+      "passwordHash": "939644aad10e2daf42ed41c8768f925001917ce66618cb974acb24bb9a9f9956",
+      "profile": {
+        "department": "Warehousing",
+        "site": "Pune Plant",
+        "hourlyRate": 190,
+        "minimumHourlyWage": 178
+      }
+    },
+    {
+      "id": "USR-EMP-002",
+      "name": "Meera Iyer",
+      "email": "meera@slcs.local",
+      "role": "employee",
+      "passwordSalt": "lc-demo-2026",
+      "passwordHash": "939644aad10e2daf42ed41c8768f925001917ce66618cb974acb24bb9a9f9956",
+      "profile": {
+        "department": "Manufacturing",
+        "site": "Chennai Unit",
+        "hourlyRate": 172,
+        "minimumHourlyWage": 178
+      }
+    },
+    {
+      "id": "USR-MGR-001",
+      "name": "Nikhil Sharma",
+      "email": "employer@slcs.local",
+      "role": "employer",
+      "passwordSalt": "lc-demo-2026",
+      "passwordHash": "939644aad10e2daf42ed41c8768f925001917ce66618cb974acb24bb9a9f9956",
+      "profile": {
+        "department": "People Operations",
+        "site": "All sites"
+      }
+    }
+  ],
+  "workforce": {
+    "totalWorkers": 482,
+    "employees": 392,
+    "contractors": 90,
+    "locations": 5,
+    "departments": [
+      {
+        "name": "Manufacturing",
+        "count": 210,
+        "risk": "watch"
+      },
+      {
+        "name": "Warehousing",
+        "count": 86,
+        "risk": "at_risk"
+      },
+      {
+        "name": "Customer Operations",
+        "count": 74,
+        "risk": "compliant"
+      },
+      {
+        "name": "Engineering",
+        "count": 68,
+        "risk": "compliant"
+      },
+      {
+        "name": "Corporate",
+        "count": 44,
+        "risk": "watch"
+      }
+    ]
+  },
+  "workLogs": [
+    {
+      "id": "WLOG-1001",
+      "userId": "USR-EMP-001",
+      "date": "2026-04-24",
+      "startTime": "09:00",
+      "endTime": "17:30",
+      "totalHours": 8.5,
+      "overtimeHours": 0.5,
+      "wagePaid": 1615,
+      "source": "manual",
+      "createdBy": "USR-EMP-001",
+      "createdAt": "2026-04-24T12:15:00.000Z"
+    },
+    {
+      "id": "WLOG-1002",
+      "userId": "USR-EMP-001",
+      "date": "2026-04-25",
+      "startTime": "08:00",
+      "endTime": "18:45",
+      "totalHours": 10.75,
+      "overtimeHours": 2.75,
+      "wagePaid": 1800,
+      "source": "manual",
+      "createdBy": "USR-EMP-001",
+      "createdAt": "2026-04-25T13:20:00.000Z"
+    },
+    {
+      "id": "WLOG-1003",
+      "userId": "USR-EMP-002",
+      "date": "2026-04-25",
+      "startTime": "09:30",
+      "endTime": "18:00",
+      "totalHours": 8.5,
+      "overtimeHours": 0.5,
+      "wagePaid": 1462,
+      "source": "manual",
+      "createdBy": "USR-MGR-001",
+      "createdAt": "2026-04-25T13:45:00.000Z"
+    },
+    {
+      "id": "WLOG-1004",
+      "userId": "USR-EMP-002",
+      "date": "2026-04-26",
+      "startTime": "07:45",
+      "endTime": "17:15",
+      "totalHours": 9.5,
+      "overtimeHours": 1.5,
+      "wagePaid": 1634,
+      "source": "manual",
+      "createdBy": "USR-MGR-001",
+      "createdAt": "2026-04-26T13:10:00.000Z"
+    }
+  ],
+  "controls": [
+    {
+      "id": "CTL-001",
+      "title": "Wage floor and payroll traceability",
+      "category": "Compensation",
+      "status": "watch",
+      "owner": "Payroll Lead",
+      "dueDate": "2026-05-12",
+      "lastAssessed": "2026-04-15",
+      "lastNotes": "Two contractor invoices require wage floor confirmation.",
+      "requiredData": [
+        "worker category",
+        "pay period",
+        "gross wage",
+        "deductions",
+        "site"
+      ],
+      "prohibitedCollection": [
+        "family financial details",
+        "continuous location trails",
+        "unrelated bank transaction history"
+      ],
+      "privacyControls": [
+        "Use payroll summaries for first pass testing",
+        "Restrict named payroll records to exception review",
+        "Mask bank account details after reconciliation"
+      ],
+      "dataSensitivity": 4,
+      "evidenceNeeded": [
+        "Payroll register summary",
+        "Exception register",
+        "Contractor wage certificate"
+      ]
+    },
+    {
+      "id": "CTL-002",
+      "title": "Working hours, overtime, and rest day limits",
+      "category": "Working Time",
+      "status": "at_risk",
+      "owner": "Plant HR Manager",
+      "dueDate": "2026-05-03",
+      "lastAssessed": "2026-04-10",
+      "lastNotes": "Warehouse overtime review shows recurring exceptions around weekly caps.",
+      "requiredData": [
+        "shift schedule",
+        "clock-in summary",
+        "overtime hours",
+        "rest day allocation",
+        "site"
+      ],
+      "prohibitedCollection": [
+        "continuous geolocation",
+        "audio monitoring",
+        "video analytics for productivity scoring"
+      ],
+      "privacyControls": [
+        "Aggregate attendance by shift before named review",
+        "Escalate only repeated threshold exceptions",
+        "Purge raw access logs after validation window"
+      ],
+      "dataSensitivity": 5,
+      "evidenceNeeded": [
+        "Roster summary",
+        "Overtime approval trail",
+        "Rest day exception report"
+      ]
+    },
+    {
+      "id": "CTL-003",
+      "title": "Leave, holidays, and absence entitlements",
+      "category": "Leave",
+      "status": "compliant",
+      "owner": "HR Shared Services",
+      "dueDate": "2026-06-01",
+      "lastAssessed": "2026-04-18",
+      "lastNotes": "Entitlement sampling passed with anonymized leave balance extracts.",
+      "requiredData": [
+        "employment type",
+        "leave balance",
+        "holiday calendar",
+        "approved absence count"
+      ],
+      "prohibitedCollection": [
+        "medical diagnosis unless legally required",
+        "family details unrelated to leave request"
+      ],
+      "privacyControls": [
+        "Separate medical certificates from manager views",
+        "Use entitlement deltas instead of full leave history"
+      ],
+      "dataSensitivity": 3,
+      "evidenceNeeded": [
+        "Leave balance extract",
+        "Holiday calendar approval",
+        "Exception closure log"
+      ]
+    },
+    {
+      "id": "CTL-004",
+      "title": "Statutory benefits and social security contributions",
+      "category": "Benefits",
+      "status": "watch",
+      "owner": "Benefits Specialist",
+      "dueDate": "2026-05-21",
+      "lastAssessed": "2026-04-08",
+      "lastNotes": "New joiner benefit enrollment timing needs monthly monitoring.",
+      "requiredData": [
+        "worker identifier",
+        "contribution basis",
+        "enrollment date",
+        "payment confirmation"
+      ],
+      "prohibitedCollection": [
+        "unrelated health information",
+        "non-essential dependent identifiers"
+      ],
+      "privacyControls": [
+        "Tokenize worker identifiers in monthly control testing",
+        "Restrict contribution files to payroll and benefits roles"
+      ],
+      "dataSensitivity": 4,
+      "evidenceNeeded": [
+        "Contribution filing receipt",
+        "Enrollment exception report",
+        "Payment reconciliation summary"
+      ]
+    },
+    {
+      "id": "CTL-005",
+      "title": "Health, safety, and incident response",
+      "category": "Safety",
+      "status": "pending",
+      "owner": "Safety Officer",
+      "dueDate": "2026-05-17",
+      "lastAssessed": null,
+      "lastNotes": "New contractor safety orientation workflow not yet assessed.",
+      "requiredData": [
+        "training completion",
+        "incident category",
+        "site",
+        "corrective action owner"
+      ],
+      "prohibitedCollection": [
+        "medical diagnosis in general incident dashboard",
+        "biometric health tracking without specific legal basis"
+      ],
+      "privacyControls": [
+        "Separate injury details from safety trend dashboard",
+        "Report trend metrics at site level before named case review"
+      ],
+      "dataSensitivity": 4,
+      "evidenceNeeded": [
+        "Training completion summary",
+        "Incident closure register",
+        "Safety committee minutes"
+      ]
+    },
+    {
+      "id": "CTL-006",
+      "title": "Equal opportunity, harassment, and grievance handling",
+      "category": "Worker Voice",
+      "status": "compliant",
+      "owner": "Employee Relations",
+      "dueDate": "2026-06-15",
+      "lastAssessed": "2026-04-22",
+      "lastNotes": "Grievance response time and closure evidence reviewed with restricted case access.",
+      "requiredData": [
+        "case category",
+        "submission date",
+        "resolution date",
+        "assigned investigator"
+      ],
+      "prohibitedCollection": [
+        "identity of anonymous complainants",
+        "unrelated personal messages",
+        "protected characteristic data unless necessary"
+      ],
+      "privacyControls": [
+        "Need-to-know case access",
+        "Use anonymized trend reporting",
+        "Separate witness notes from dashboard metrics"
+      ],
+      "dataSensitivity": 5,
+      "evidenceNeeded": [
+        "Policy acknowledgement summary",
+        "Case closure timeliness report",
+        "Training completion summary"
+      ]
+    },
+    {
+      "id": "CTL-007",
+      "title": "Contractor and vendor labour oversight",
+      "category": "Third Party",
+      "status": "at_risk",
+      "owner": "Procurement Compliance",
+      "dueDate": "2026-05-06",
+      "lastAssessed": "2026-04-12",
+      "lastNotes": "Two vendors have missing monthly proof packs.",
+      "requiredData": [
+        "vendor name",
+        "worker count",
+        "payment certificate",
+        "insurance proof",
+        "site"
+      ],
+      "prohibitedCollection": [
+        "full contractor personnel file",
+        "personal documents not tied to statutory obligation"
+      ],
+      "privacyControls": [
+        "Require vendor attestations before named records",
+        "Sample named files only when attestation fails",
+        "Set vendor evidence expiry dates"
+      ],
+      "dataSensitivity": 4,
+      "evidenceNeeded": [
+        "Vendor monthly attestation",
+        "Worker count reconciliation",
+        "Corrective action tracker"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "EVD-1001",
+      "title": "April payroll compliance extract",
+      "controlId": "CTL-001",
+      "type": "Payroll summary",
+      "source": "Payroll system",
+      "retention": "24 months, masked after reconciliation",
+      "accessLevel": "Restricted",
+      "personalData": "Pseudonymized",
+      "nextReview": "2026-05-12",
+      "status": "active",
+      "createdAt": "2026-04-15T09:30:00.000Z"
+    },
+    {
+      "id": "EVD-1002",
+      "title": "Warehouse overtime exception report",
+      "controlId": "CTL-002",
+      "type": "Exception report",
+      "source": "Time and attendance system",
+      "retention": "12 months, raw logs purged after 45 days",
+      "accessLevel": "Confidential",
+      "personalData": "Named exceptions only",
+      "nextReview": "2026-05-03",
+      "status": "active",
+      "createdAt": "2026-04-10T11:15:00.000Z"
+    },
+    {
+      "id": "EVD-1003",
+      "title": "Leave balance sampling memo",
+      "controlId": "CTL-003",
+      "type": "Sampling memo",
+      "source": "HRIS",
+      "retention": "18 months",
+      "accessLevel": "Internal",
+      "personalData": "Anonymized",
+      "nextReview": "2026-06-01",
+      "status": "reviewed",
+      "createdAt": "2026-04-18T13:45:00.000Z"
+    },
+    {
+      "id": "EVD-1004",
+      "title": "Vendor labour proof pack tracker",
+      "controlId": "CTL-007",
+      "type": "Tracker",
+      "source": "Procurement portal",
+      "retention": "36 months or vendor contract term",
+      "accessLevel": "Restricted",
+      "personalData": "Vendor-level first pass",
+      "nextReview": "2026-05-06",
+      "status": "active",
+      "createdAt": "2026-04-12T10:00:00.000Z"
+    }
+  ],
+  "assessments": [
+    {
+      "id": "ASM-2001",
+      "controlId": "CTL-006",
+      "status": "compliant",
+      "owner": "Employee Relations",
+      "notes": "Case access review complete. Trend reports use anonymized case categories.",
+      "evidenceRefs": [
+        "Policy acknowledgement summary",
+        "Training completion summary"
+      ],
+      "dueDate": "2026-06-15",
+      "createdAt": "2026-04-22T14:00:00.000Z"
+    },
+    {
+      "id": "ASM-2002",
+      "controlId": "CTL-002",
+      "status": "at_risk",
+      "owner": "Plant HR Manager",
+      "notes": "Weekly cap exceptions concentrated in warehouse night shift.",
+      "evidenceRefs": [
+        "Warehouse overtime exception report"
+      ],
+      "dueDate": "2026-05-03",
+      "createdAt": "2026-04-10T11:30:00.000Z"
+    },
+    {
+      "id": "ASM-2003",
+      "controlId": "CTL-001",
+      "status": "watch",
+      "owner": "Payroll Lead",
+      "notes": "Payroll summaries validated. Contractor certificates incomplete for two vendors.",
+      "evidenceRefs": [
+        "April payroll compliance extract"
+      ],
+      "dueDate": "2026-05-12",
+      "createdAt": "2026-04-15T10:00:00.000Z"
+    }
+  ],
+  "audit": [
+    {
+      "id": "AUD-3001",
+      "action": "program.seeded",
+      "message": "Initial reduced-intrusion compliance workspace created",
+      "meta": {
+        "version": "1.0.0"
+      },
+      "actor": "system",
+      "createdAt": "2026-04-28T05:00:00.000Z"
+    }
+  ]
+}

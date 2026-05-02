@@ -1,0 +1,22 @@
+{
+  "name": "labour-compliance-reduced-intrusion",
+  "version": "1.0.0",
+  "description": "A professional full-stack labour law compliance dashboard focused on privacy-preserving, reduced-intrusion operations.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node tests/complianceEngine.test.js"
+  },
+  "keywords": [
+    "labour-law",
+    "compliance",
+    "privacy",
+    "node",
+    "dashboard"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}
