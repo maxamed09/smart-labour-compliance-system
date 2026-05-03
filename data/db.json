@@ -162,6 +162,19 @@
         "site": "All sites"
       },
       "createdAt": "2026-05-03T10:13:36.372Z"
+    },
+    {
+      "id": "USR-3D244C4F",
+      "name": "moha",
+      "email": "mohahassan@gmail.com",
+      "role": "employer",
+      "passwordSalt": "a425dd30a00b10316ace47c483f712b7",
+      "passwordHash": "a4a1d6f6e91fd0c24857b6cafb18d0e299c4829ed4b4f3a45b048497dcebccd2",
+      "profile": {
+        "department": "People Operations",
+        "site": "All sites"
+      },
+      "createdAt": "2026-05-03T10:20:42.214Z"
     }
   ],
   "workforce": {
