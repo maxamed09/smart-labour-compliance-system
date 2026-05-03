@@ -7,6 +7,7 @@ const {
   applyAssessment,
   applyEvidence,
   applyWorkLog,
+  canManageWorkforce,
   updateEvidence,
 } = require("./src/complianceEngine");
 const { readDb, writeDb, ensureDb } = require("./src/storage");
@@ -73,6 +74,14 @@ function sendError(res, error) {
 
 function notFound(res) {
   sendJson(res, 404, { error: "Route not found" });
+}
+
+function requireManager(session) {
+  if (!canManageWorkforce(session.user)) {
+    const error = new Error("Employer access required");
+    error.statusCode = 403;
+    throw error;
+  }
 }
 
 async function parseJsonBody(req) {
@@ -187,6 +196,7 @@ async function handleApi(req, res, pathname) {
   const session = requireSession(req);
 
   if (req.method === "GET" && pathname === "/api/dashboard") {
+    requireManager(session);
     const db = await readDb();
     sendJson(res, 200, buildDashboard(db));
     return;
@@ -225,30 +235,35 @@ async function handleApi(req, res, pathname) {
   }
 
   if (req.method === "GET" && pathname === "/api/controls") {
+    requireManager(session);
     const db = await readDb();
     sendJson(res, 200, { controls: db.controls });
     return;
   }
 
   if (req.method === "GET" && pathname === "/api/evidence") {
+    requireManager(session);
     const db = await readDb();
     sendJson(res, 200, { evidence: db.evidence });
     return;
   }
 
   if (req.method === "GET" && pathname === "/api/assessments") {
+    requireManager(session);
     const db = await readDb();
     sendJson(res, 200, { assessments: db.assessments });
     return;
   }
 
   if (req.method === "GET" && pathname === "/api/audit") {
+    requireManager(session);
     const db = await readDb();
     sendJson(res, 200, { audit: db.audit.slice(0, 50) });
     return;
   }
 
   if (req.method === "POST" && pathname === "/api/assessments") {
+    requireManager(session);
     const payload = await parseJsonBody(req);
     const db = await readDb();
     const assessment = applyAssessment(db, payload);
@@ -258,6 +273,7 @@ async function handleApi(req, res, pathname) {
   }
 
   if (req.method === "POST" && pathname === "/api/evidence") {
+    requireManager(session);
     const payload = await parseJsonBody(req);
     const db = await readDb();
     const evidence = applyEvidence(db, payload);
@@ -268,6 +284,7 @@ async function handleApi(req, res, pathname) {
 
   const evidenceParams = routeMatch(pathname, "/api/evidence/:id");
   if (req.method === "PATCH" && evidenceParams) {
+    requireManager(session);
     const payload = await parseJsonBody(req);
     const db = await readDb();
     const evidence = updateEvidence(db, evidenceParams.id, payload);

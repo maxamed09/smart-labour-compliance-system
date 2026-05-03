@@ -207,6 +207,33 @@ main {
   gap: 24px;
 }
 
+.employee-overview {
+  display: grid;
+  gap: 24px;
+}
+
+.employee-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  background:
+    linear-gradient(90deg, rgba(15, 118, 110, 0.12), rgba(255, 255, 255, 0.96)),
+    var(--surface);
+}
+
+.employee-hero h2 {
+  margin: 0;
+  font-size: clamp(1.6rem, 3vw, 2.25rem);
+}
+
+.employee-hero p {
+  max-width: 680px;
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
 .surface,
 .metric-card {
   background: var(--surface);
@@ -788,6 +815,11 @@ textarea.input {
   .topbar-actions .status-pill {
     flex: 1 1 100%;
     justify-content: center;
+  }
+
+  .employee-hero {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .surface {

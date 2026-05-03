@@ -283,6 +283,7 @@ function buildLabourDashboard(db, options = {}) {
   )).length;
 
   return {
+    organization: db.organization,
     rules,
     employees: employees.map(publicEmployee),
     summary: {

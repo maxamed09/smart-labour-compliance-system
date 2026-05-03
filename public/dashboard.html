@@ -19,12 +19,12 @@
 
       <nav class="nav-list">
         <button class="nav-item active" type="button" data-view="overview">Overview</button>
-        <button class="nav-item" type="button" data-view="attendance">Attendance</button>
-        <button class="nav-item" type="button" data-view="employees">Employee Records</button>
-        <button class="nav-item" type="button" data-view="reports">Reports</button>
-        <button class="nav-item" type="button" data-view="controls">Controls</button>
-        <button class="nav-item" type="button" data-view="assess">Assess</button>
-        <button class="nav-item" type="button" data-view="evidence">Evidence</button>
+        <button class="nav-item" type="button" data-view="attendance" data-employee-label="My Attendance">Attendance</button>
+        <button class="nav-item" type="button" data-view="employees" data-manager-only>Employee Records</button>
+        <button class="nav-item" type="button" data-view="reports" data-manager-only>Reports</button>
+        <button class="nav-item" type="button" data-view="controls" data-manager-only>Controls</button>
+        <button class="nav-item" type="button" data-view="assess" data-manager-only>Assess</button>
+        <button class="nav-item" type="button" data-view="evidence" data-manager-only>Evidence</button>
         <button class="nav-item" type="button" data-view="privacy">Data Minimization</button>
       </nav>
 
@@ -38,8 +38,8 @@
     <div class="workspace">
       <header class="topbar">
         <div>
-          <p class="eyebrow">Labour Law Compliance with Reduced Intrusion</p>
-          <h1>Smart Labour Compliance System</h1>
+          <p id="workspaceEyebrow" class="eyebrow">Labour Law Compliance with Reduced Intrusion</p>
+          <h1 id="workspaceTitle">Smart Labour Compliance System</h1>
         </div>
         <div class="topbar-actions">
           <span id="apiStatus" class="status-pill status-muted">Connecting</span>
@@ -51,61 +51,98 @@
 
       <main>
         <section id="overview" class="view active">
-          <div class="metric-grid" id="metricGrid"></div>
-
-          <div class="content-grid two-columns">
-            <section class="surface">
-              <div class="section-heading">
-                <div>
-                  <span class="panel-label">SLCS alerts</span>
-                  <h2>Work hours and wage checks</h2>
-                </div>
-              </div>
-              <div id="labourAlertList" class="alert-list"></div>
-            </section>
-
-            <section class="surface">
-              <div class="section-heading">
-                <div>
-                  <span class="panel-label">Privacy guardrail</span>
-                  <h2>Essential data only</h2>
-                </div>
-              </div>
-              <div id="privacyPosture" class="privacy-compact"></div>
-            </section>
-          </div>
-
-          <div class="content-grid two-columns">
-            <section class="surface">
-              <div class="section-heading">
-                <div>
-                  <span class="panel-label">Current risk</span>
-                  <h2>Control heatmap</h2>
-                </div>
-              </div>
-              <div id="riskChart" class="risk-chart"></div>
-            </section>
-
-            <section class="surface">
-              <div class="section-heading">
-                <div>
-                  <span class="panel-label">Priority queue</span>
-                  <h2>Alerts</h2>
-                </div>
-              </div>
-              <div id="alertList" class="alert-list"></div>
-            </section>
-          </div>
-
-          <section class="surface">
-            <div class="section-heading">
+          <div id="employeeOverviewPanel" class="employee-overview hidden">
+            <section class="surface employee-hero">
               <div>
-                <span class="panel-label">Workforce scope</span>
-                <h2>Coverage by department</h2>
+                <span class="panel-label">Employee workspace</span>
+                <h2 id="employeeWelcome">My work summary</h2>
+                <p>Log your work day manually and review only your own hours, wages, overtime, and rule alerts.</p>
               </div>
+              <button class="button primary" type="button" data-view-jump="attendance">Log Work Hours</button>
+            </section>
+
+            <div id="employeeMetricGrid" class="metric-grid"></div>
+
+            <div class="content-grid two-columns">
+              <section class="surface">
+                <div class="section-heading">
+                  <div>
+                    <span class="panel-label">My recent logs</span>
+                    <h2>Attendance history</h2>
+                  </div>
+                </div>
+                <div id="employeeRecentLogs" class="worklog-list"></div>
+              </section>
+
+              <section class="surface">
+                <div class="section-heading">
+                  <div>
+                    <span class="panel-label">Privacy guardrail</span>
+                    <h2>Essential data only</h2>
+                  </div>
+                </div>
+                <div id="employeePrivacyPosture" class="privacy-compact"></div>
+              </section>
             </div>
-            <div id="departmentGrid" class="department-grid"></div>
-          </section>
+          </div>
+
+          <div id="managerOverviewPanel">
+            <div class="metric-grid" id="metricGrid"></div>
+
+            <div class="content-grid two-columns">
+              <section class="surface">
+                <div class="section-heading">
+                  <div>
+                    <span class="panel-label">SLCS alerts</span>
+                    <h2>Work hours and wage checks</h2>
+                  </div>
+                </div>
+                <div id="labourAlertList" class="alert-list"></div>
+              </section>
+
+              <section class="surface">
+                <div class="section-heading">
+                  <div>
+                    <span class="panel-label">Privacy guardrail</span>
+                    <h2>Essential data only</h2>
+                  </div>
+                </div>
+                <div id="privacyPosture" class="privacy-compact"></div>
+              </section>
+            </div>
+
+            <div class="content-grid two-columns">
+              <section class="surface">
+                <div class="section-heading">
+                  <div>
+                    <span class="panel-label">Current risk</span>
+                    <h2>Control heatmap</h2>
+                  </div>
+                </div>
+                <div id="riskChart" class="risk-chart"></div>
+              </section>
+
+              <section class="surface">
+                <div class="section-heading">
+                  <div>
+                    <span class="panel-label">Priority queue</span>
+                    <h2>Alerts</h2>
+                  </div>
+                </div>
+                <div id="alertList" class="alert-list"></div>
+              </section>
+            </div>
+
+            <section class="surface">
+              <div class="section-heading">
+                <div>
+                  <span class="panel-label">Workforce scope</span>
+                  <h2>Coverage by department</h2>
+                </div>
+              </div>
+              <div id="departmentGrid" class="department-grid"></div>
+            </section>
+          </div>
         </section>
 
         <section id="attendance" class="view">

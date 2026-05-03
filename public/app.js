@@ -18,6 +18,7 @@ const statusLabels = {
   at_risk: "At risk",
   pending: "Pending",
 };
+const managerOnlyViews = new Set(["employees", "reports", "controls", "assess", "evidence"]);
 
 function canManageWorkforce() {
   return String(state.user?.role || "").toLowerCase() !== "employee";
@@ -25,8 +26,16 @@ function canManageWorkforce() {
 
 const els = {
   apiStatus: document.querySelector("#apiStatus"),
+  workspaceEyebrow: document.querySelector("#workspaceEyebrow"),
+  workspaceTitle: document.querySelector("#workspaceTitle"),
   programOwner: document.querySelector("#programOwner"),
   jurisdictionMode: document.querySelector("#jurisdictionMode"),
+  employeeOverviewPanel: document.querySelector("#employeeOverviewPanel"),
+  managerOverviewPanel: document.querySelector("#managerOverviewPanel"),
+  employeeMetricGrid: document.querySelector("#employeeMetricGrid"),
+  employeeWelcome: document.querySelector("#employeeWelcome"),
+  employeeRecentLogs: document.querySelector("#employeeRecentLogs"),
+  employeePrivacyPosture: document.querySelector("#employeePrivacyPosture"),
   metricGrid: document.querySelector("#metricGrid"),
   labourAlertList: document.querySelector("#labourAlertList"),
   privacyPosture: document.querySelector("#privacyPosture"),
@@ -137,19 +146,34 @@ async function loadAll() {
     return;
   }
 
-  const [dashboard, labour, controls, evidence, audit] = await Promise.all([
-    api("/api/dashboard"),
-    api("/api/labour-dashboard"),
-    api("/api/controls"),
-    api("/api/evidence"),
-    api("/api/audit"),
-  ]);
-
-  state.dashboard = dashboard;
+  const labour = await api("/api/labour-dashboard");
   state.labour = labour;
-  state.controls = controls.controls;
-  state.evidence = evidence.evidence;
-  state.audit = audit.audit;
+
+  if (canManageWorkforce()) {
+    const [dashboard, controls, evidence, audit] = await Promise.all([
+      api("/api/dashboard"),
+      api("/api/controls"),
+      api("/api/evidence"),
+      api("/api/audit"),
+    ]);
+
+    state.dashboard = dashboard;
+    state.controls = controls.controls;
+    state.evidence = evidence.evidence;
+    state.audit = audit.audit;
+  } else {
+    state.dashboard = {
+      organization: labour.organization || {},
+      summary: {},
+      risks: [],
+      alerts: [],
+      workforce: { departments: [] },
+    };
+    state.controls = [];
+    state.evidence = [];
+    state.audit = [];
+  }
+
   setApiStatus("Live", "status-compliant");
   render();
 }
@@ -166,28 +190,69 @@ function showToast(message) {
 }
 
 function render() {
+  renderRoleAccess();
   renderShell();
-  renderMetrics();
-  renderLabourAlerts();
-  renderPrivacyPosture();
-  renderRiskChart();
-  renderAlerts();
-  renderDepartments();
   renderAttendance();
-  renderEmployees();
-  renderReports();
-  renderControls();
-  renderControlSelects();
-  renderSelectedControl();
-  renderEvidence();
   renderPrivacyMatrix();
-  renderAudit();
+
+  if (canManageWorkforce()) {
+    renderMetrics();
+    renderLabourAlerts();
+    renderPrivacyPosture();
+    renderRiskChart();
+    renderAlerts();
+    renderDepartments();
+    renderEmployees();
+    renderReports();
+    renderControls();
+    renderControlSelects();
+    renderSelectedControl();
+    renderEvidence();
+    renderAudit();
+  } else {
+    renderEmployeeOverview();
+  }
 }
 
 function renderShell() {
   const org = state.dashboard?.organization || {};
-  els.programOwner.textContent = org.programOwner || "People Operations";
-  els.jurisdictionMode.textContent = org.jurisdictionMode || "Configurable by site";
+  if (canManageWorkforce()) {
+    els.workspaceEyebrow.textContent = "Employer compliance workspace";
+    els.workspaceTitle.textContent = "Smart Labour Compliance System";
+    els.programOwner.textContent = org.programOwner || "People Operations";
+    els.jurisdictionMode.textContent = org.jurisdictionMode || "Configurable by site";
+    return;
+  }
+
+  els.workspaceEyebrow.textContent = "Employee self-service workspace";
+  els.workspaceTitle.textContent = "My Labour Compliance Dashboard";
+  els.programOwner.textContent = state.user?.name || "Employee";
+  els.jurisdictionMode.textContent = "Personal attendance and wage summary";
+}
+
+function renderRoleAccess() {
+  const isManager = canManageWorkforce();
+  document.body.dataset.workspaceRole = isManager ? "manager" : "employee";
+
+  document.querySelectorAll("[data-manager-only]").forEach((element) => {
+    element.hidden = !isManager;
+  });
+
+  document.querySelectorAll("[data-employee-label]").forEach((element) => {
+    if (!element.dataset.defaultLabel) {
+      element.dataset.defaultLabel = element.textContent;
+    }
+    element.textContent = isManager ? element.dataset.defaultLabel : element.dataset.employeeLabel;
+  });
+
+  els.exportBtn.classList.toggle("hidden", !isManager);
+  els.managerOverviewPanel.classList.toggle("hidden", !isManager);
+  els.employeeOverviewPanel.classList.toggle("hidden", isManager);
+
+  if (!isManager && managerOnlyViews.has(state.activeView)) {
+    state.activeView = "overview";
+  }
+  switchView(state.activeView);
 }
 
 function renderMetrics() {
@@ -248,7 +313,11 @@ function renderLabourAlerts() {
 
 function renderPrivacyPosture() {
   const posture = state.labour.privacyPosture;
-  els.privacyPosture.innerHTML = `
+  renderPrivacyPostureInto(els.privacyPosture, posture);
+}
+
+function renderPrivacyPostureInto(target, posture) {
+  target.innerHTML = `
     <div class="privacy-columns compact-columns">
       <div class="privacy-column">
         <span>Collect</span>
@@ -261,6 +330,45 @@ function renderPrivacyPosture() {
     </div>
     <p class="subtle">${escapeHtml(posture.retention)}</p>
   `;
+}
+
+function renderEmployeeOverview() {
+  const summary = state.labour.personalSummary || {};
+  const recentLogs = summary.recentLogs || [];
+  const cards = [
+    {
+      label: "My hours",
+      value: summary.totalHours || 0,
+      detail: `${summary.logCount || 0} work log(s) submitted`,
+    },
+    {
+      label: "Average day",
+      value: summary.averageHours || 0,
+      detail: "Calculated from my submitted logs",
+    },
+    {
+      label: "My wages",
+      value: formatMoney(summary.totalWages || 0),
+      detail: `${formatMoney(summary.hourlyRate || 0)} hourly profile rate`,
+    },
+    {
+      label: "My alerts",
+      value: summary.violationCount || 0,
+      detail: `${summary.overtimeIssues || 0} hours, ${summary.minimumWageIssues || 0} wage`,
+    },
+  ];
+
+  els.employeeWelcome.textContent = `Welcome, ${state.user?.name || "employee"}`;
+  els.employeeMetricGrid.innerHTML = cards.map((metric) => `
+    <article class="metric-card">
+      <span>${escapeHtml(metric.label)}</span>
+      <strong>${escapeHtml(metric.value)}</strong>
+      <p>${escapeHtml(metric.detail)}</p>
+    </article>
+  `).join("");
+
+  renderWorkLogList(els.employeeRecentLogs, recentLogs, "You have not submitted any work logs yet.");
+  renderPrivacyPostureInto(els.employeePrivacyPosture, state.labour.privacyPosture);
 }
 
 function renderAttendance() {
@@ -565,6 +673,38 @@ function renderEvidence() {
 }
 
 function renderPrivacyMatrix() {
+  if (!canManageWorkforce()) {
+    const posture = state.labour.privacyPosture;
+    els.privacyMatrix.innerHTML = `
+      <article class="privacy-card">
+        <header>
+          <div>
+            <strong>My data collected by SLCS</strong>
+            <p>Employee self-service only stores the fields needed to check work-hour, overtime, and wage rules.</p>
+          </div>
+          <span class="status-pill status-compliant">Reduced</span>
+        </header>
+        <div class="privacy-columns compact-columns">
+          <div class="privacy-column">
+            <span>Collected</span>
+            ${simpleList(posture.collected)}
+          </div>
+          <div class="privacy-column">
+            <span>Not collected</span>
+            ${simpleList(posture.avoided)}
+          </div>
+        </div>
+      </article>
+    `;
+    els.auditList.innerHTML = `
+      <article class="audit-item">
+        <strong>Employee privacy boundary</strong>
+        <p>You can view and submit your own attendance records. Employer-only compliance evidence, control assessments, and workforce reports are not shown in this dashboard.</p>
+      </article>
+    `;
+    return;
+  }
+
   els.privacyMatrix.innerHTML = state.controls.map((control) => `
     <article class="privacy-card">
       <header>
@@ -611,18 +751,28 @@ function renderAudit() {
 }
 
 function switchView(viewId) {
+  if (!canManageWorkforce() && managerOnlyViews.has(viewId)) {
+    viewId = "overview";
+  }
+
   state.activeView = viewId;
   document.querySelectorAll(".view").forEach((view) => {
-    view.classList.toggle("active", view.id === viewId);
+    const unavailable = !canManageWorkforce() && managerOnlyViews.has(view.id);
+    view.hidden = unavailable;
+    view.classList.toggle("active", !unavailable && view.id === viewId);
   });
   document.querySelectorAll(".nav-item").forEach((item) => {
-    item.classList.toggle("active", item.dataset.view === viewId);
+    item.classList.toggle("active", !item.hidden && item.dataset.view === viewId);
   });
 }
 
 function bindEvents() {
   document.querySelectorAll(".nav-item").forEach((item) => {
     item.addEventListener("click", () => switchView(item.dataset.view));
+  });
+
+  document.querySelectorAll("[data-view-jump]").forEach((item) => {
+    item.addEventListener("click", () => switchView(item.dataset.viewJump));
   });
 
   els.refreshBtn.addEventListener("click", () => {
