@@ -23,7 +23,7 @@ The included controls are configurable examples. They are not legal advice and s
 |-- data/
 |   `-- db.json
 |-- api/
-|   `-- index.mjs
+|   `-- index.js
 |-- public/
 |   |-- app.js
 |   |-- dashboard.html
