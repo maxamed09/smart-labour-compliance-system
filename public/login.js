@@ -6,6 +6,11 @@ const signupButton = document.querySelector("#signupButton");
 const signupMessage = document.querySelector("#signupMessage");
 const authTabs = document.querySelectorAll("[data-auth-mode]");
 const authPanels = document.querySelectorAll("[data-auth-panel]");
+const API_BASE_URL = String(window.SLCS_API_BASE_URL || "").replace(/\/$/, "");
+
+function apiUrl(path) {
+  return `${API_BASE_URL}${path}`;
+}
 
 function setAuthMode(mode) {
   authTabs.forEach((tab) => {
@@ -21,7 +26,7 @@ function setAuthMode(mode) {
 }
 
 async function checkExistingSession() {
-  const response = await fetch("/api/session", { credentials: "same-origin" });
+  const response = await fetch(apiUrl("/api/session"), { credentials: "include" });
   const session = await response.json();
   if (session.authenticated) {
     window.location.href = "/app";
@@ -54,9 +59,9 @@ loginForm.addEventListener("submit", async (event) => {
 
   try {
     const payload = Object.fromEntries(new FormData(loginForm).entries());
-    const response = await fetch("/api/login", {
+    const response = await fetch(apiUrl("/api/login"), {
       method: "POST",
-      credentials: "same-origin",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -90,9 +95,9 @@ signupForm.addEventListener("submit", async (event) => {
       throw new Error("Passwords do not match");
     }
 
-    const response = await fetch("/api/signup", {
+    const response = await fetch(apiUrl("/api/signup"), {
       method: "POST",
-      credentials: "same-origin",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },

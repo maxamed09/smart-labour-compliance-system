@@ -22,16 +22,17 @@ The included controls are configurable examples. They are not legal advice and s
 .
 |-- data/
 |   `-- db.json
-|-- api/
-|   `-- index.js
 |-- public/
 |   |-- app.js
 |   |-- dashboard.html
 |   |-- index.html
 |   |-- login.html
 |   |-- login.js
+|   |-- runtime-config.js
 |   |-- site.css
 |   `-- styles.css
+|-- scripts/
+|   `-- build-frontend.js
 |-- src/
 |   |-- auth.js
 |   |-- complianceEngine.js
@@ -80,15 +81,39 @@ npm test
 
 ## Deploy On Vercel
 
-This repo includes a Vercel function wrapper in `api/index.mjs` and a catch-all rewrite in `vercel.json`, so the same Node backend handles `/api/*`, `/login`, `/app`, and static assets after deployment.
+Vercel should host the frontend only. Deploy the Node backend separately first, then point the Vercel build at that backend URL.
 
-Recommended Vercel environment variable:
+Vercel settings:
+
+```text
+Framework Preset: Other
+Build Command: npm run build
+Output Directory: dist
+Root Directory: ./
+```
+
+Vercel environment variable:
+
+```text
+SLCS_API_BASE_URL=https://your-backend-host.example.com
+```
+
+For the backend, use a Node hosting platform such as Render. Use:
+
+```text
+Build Command: npm install
+Start Command: npm start
+```
+
+Backend environment variables:
 
 ```text
 SESSION_SECRET=use-a-long-random-secret
+COOKIE_SECURE=true
+CORS_ORIGIN=https://your-vercel-project.vercel.app
 ```
 
-The bundled `data/db.json` works for demo login accounts. Local development writes changes to `data/db.json`; Vercel deployments can only keep new signup/work-log writes in warm function memory, so use MongoDB, MySQL, Postgres, or another hosted database for durable production data.
+The bundled `data/db.json` works for demo login accounts. Local development writes changes to `data/db.json`; hosted deployments may lose JSON writes after restarts or redeploys, so use MongoDB, MySQL, Postgres, or another hosted database for durable production data.
 
 ## API
 

@@ -192,13 +192,21 @@ function clearSession(req) {
   getSession(req);
 }
 
+function secureCookieAttributes() {
+  if (process.env.COOKIE_SECURE === "true" || process.env.NODE_ENV === "production") {
+    return "SameSite=None; Secure";
+  }
+
+  return "SameSite=Lax";
+}
+
 function sessionCookie(sessionId, expiresAt) {
   const expires = new Date(expiresAt).toUTCString();
-  return `${SESSION_COOKIE}=${encodeURIComponent(sessionId)}; Path=/; HttpOnly; SameSite=Lax; Expires=${expires}`;
+  return `${SESSION_COOKIE}=${encodeURIComponent(sessionId)}; Path=/; HttpOnly; ${secureCookieAttributes()}; Expires=${expires}`;
 }
 
 function clearSessionCookie() {
-  return `${SESSION_COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+  return `${SESSION_COOKIE}=; Path=/; HttpOnly; ${secureCookieAttributes()}; Expires=Thu, 01 Jan 1970 00:00:00 GMT`;
 }
 
 module.exports = {

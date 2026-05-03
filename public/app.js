@@ -11,6 +11,7 @@ const state = {
     search: "",
   },
 };
+const API_BASE_URL = String(window.SLCS_API_BASE_URL || "").replace(/\/$/, "");
 
 const statusLabels = {
   compliant: "Compliant",
@@ -19,6 +20,10 @@ const statusLabels = {
   pending: "Pending",
 };
 const managerOnlyViews = new Set(["employees", "reports", "controls", "assess", "evidence"]);
+
+function apiUrl(path) {
+  return `${API_BASE_URL}${path}`;
+}
 
 function canManageWorkforce() {
   return String(state.user?.role || "").toLowerCase() !== "employee";
@@ -109,8 +114,8 @@ function formatMoney(value) {
 }
 
 async function api(path, options = {}) {
-  const response = await fetch(path, {
-    credentials: "same-origin",
+  const response = await fetch(apiUrl(path), {
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
       ...(options.headers || {}),

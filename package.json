@@ -4,6 +4,7 @@
   "description": "A professional full-stack labour law compliance dashboard focused on privacy-preserving, reduced-intrusion operations.",
   "main": "server.js",
   "scripts": {
+    "build": "node scripts/build-frontend.js",
     "start": "node server.js",
     "test": "node tests/complianceEngine.test.js"
   },

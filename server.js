@@ -25,6 +25,12 @@ const {
 const PORT = Number(process.env.PORT || 3000);
 const PUBLIC_DIR = path.resolve(__dirname, "public");
 const MAX_BODY_BYTES = 1_000_000;
+const DEFAULT_CORS_ORIGINS = [
+  "http://localhost:3000",
+  "http://localhost:3017",
+  "http://127.0.0.1:3000",
+  "http://127.0.0.1:3017",
+];
 
 const mimeTypes = {
   ".html": "text/html; charset=utf-8",
@@ -44,6 +50,43 @@ function sendJson(res, statusCode, payload) {
     "Cache-Control": "no-store",
   });
   res.end(JSON.stringify(payload));
+}
+
+function allowedCorsOrigins() {
+  return String(process.env.CORS_ORIGIN || "")
+    .split(",")
+    .map((origin) => origin.trim().replace(/\/$/, ""))
+    .filter(Boolean)
+    .concat(DEFAULT_CORS_ORIGINS);
+}
+
+function isAllowedCorsOrigin(origin) {
+  if (!origin) {
+    return false;
+  }
+
+  const normalizedOrigin = String(origin).replace(/\/$/, "");
+  return allowedCorsOrigins().includes(normalizedOrigin);
+}
+
+function applyCors(req, res) {
+  const origin = req.headers.origin;
+  if (!isAllowedCorsOrigin(origin)) {
+    return;
+  }
+
+  res.setHeader("Access-Control-Allow-Origin", origin);
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PATCH,OPTIONS");
+  res.setHeader("Vary", "Origin");
+}
+
+function sendNoContent(res) {
+  res.writeHead(204, {
+    "Cache-Control": "no-store",
+  });
+  res.end();
 }
 
 function redirect(res, location) {
@@ -357,6 +400,13 @@ async function requestHandler(req, res) {
   try {
     const url = new URL(req.url, `http://${req.headers.host || "localhost"}`);
     if (url.pathname.startsWith("/api/")) {
+      applyCors(req, res);
+
+      if (req.method === "OPTIONS") {
+        sendNoContent(res);
+        return;
+      }
+
       await handleApi(req, res, url.pathname);
       return;
     }
