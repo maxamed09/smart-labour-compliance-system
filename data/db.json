@@ -65,6 +65,49 @@
         "department": "People Operations",
         "site": "All sites"
       }
+    },
+    {
+      "id": "USR-B042ADF5",
+      "name": "Mohamed Hassan",
+      "email": "admin@labourcontrol1.local",
+      "role": "employee",
+      "passwordSalt": "abc2549b4df5577c039913bf01099efa",
+      "passwordHash": "ead22d42b78ec7e1876698517e87b8dabfe877d7376ad2f808d75147096207c7",
+      "profile": {
+        "department": "Unassigned",
+        "site": "Primary site",
+        "hourlyRate": 178,
+        "minimumHourlyWage": 178
+      },
+      "createdAt": "2026-05-03T08:38:11.884Z"
+    },
+    {
+      "id": "USR-80642D34",
+      "name": "xam",
+      "email": "hashitheog@gmail.com",
+      "role": "employer",
+      "passwordSalt": "31349e213d51133984a1480f0ac1cfa4",
+      "passwordHash": "829ced1b74ee54cc795f58e4b4d53959a3a32af95d0b97cf7a8a83ce958ec336",
+      "profile": {
+        "department": "People Operations",
+        "site": "All sites"
+      },
+      "createdAt": "2026-05-03T08:41:02.540Z"
+    },
+    {
+      "id": "USR-AE36DE55",
+      "name": "Abubakar Hashi Osman",
+      "email": "hashitheog1@gmail.com",
+      "role": "employee",
+      "passwordSalt": "e695ab7ec65a29621cc25c56baf88531",
+      "passwordHash": "e8e7e3db6f32f8acc3e017cf324e9c65a725d0031581a9d288bda31ef5d3124f",
+      "profile": {
+        "department": "Unassigned",
+        "site": "Primary site",
+        "hourlyRate": 178,
+        "minimumHourlyWage": 178
+      },
+      "createdAt": "2026-05-03T09:40:59.038Z"
     }
   ],
   "workforce": {
@@ -101,6 +144,32 @@
     ]
   },
   "workLogs": [
+    {
+      "id": "WLOG-82d119de",
+      "userId": "USR-EMP-001",
+      "date": "2026-05-03",
+      "startTime": "01:01",
+      "endTime": "14:02",
+      "totalHours": 13.02,
+      "overtimeHours": 0,
+      "wagePaid": 2473.8,
+      "source": "manual",
+      "createdBy": "USR-EMP-001",
+      "createdAt": "2026-05-03T09:17:32.177Z"
+    },
+    {
+      "id": "WLOG-c6768a54",
+      "userId": "USR-EMP-002",
+      "date": "2026-05-02",
+      "startTime": "17:28",
+      "endTime": "18:28",
+      "totalHours": 1,
+      "overtimeHours": 1,
+      "wagePaid": 0.02,
+      "source": "manual",
+      "createdBy": "USR-001",
+      "createdAt": "2026-05-02T09:58:47.783Z"
+    },
     {
       "id": "WLOG-1001",
       "userId": "USR-EMP-001",
@@ -161,8 +230,8 @@
       "category": "Compensation",
       "status": "watch",
       "owner": "Payroll Lead",
-      "dueDate": "2026-05-12",
-      "lastAssessed": "2026-04-15",
+      "dueDate": "2026-05-14",
+      "lastAssessed": "2026-05-03",
       "lastNotes": "Two contractor invoices require wage floor confirmation.",
       "requiredData": [
         "worker category",
@@ -432,6 +501,16 @@
   ],
   "assessments": [
     {
+      "id": "ASM-eb0f7a4c",
+      "controlId": "CTL-001",
+      "status": "watch",
+      "owner": "Payroll Lead",
+      "notes": "Two contractor invoices require wage floor confirmation.",
+      "evidenceRefs": [],
+      "dueDate": "2026-05-14",
+      "createdAt": "2026-05-03T09:15:27.165Z"
+    },
+    {
       "id": "ASM-2001",
       "controlId": "CTL-006",
       "status": "compliant",
@@ -470,6 +549,42 @@
     }
   ],
   "audit": [
+    {
+      "id": "AUD-f4f7c005",
+      "action": "worklog.created",
+      "message": "Work log recorded for Ravi Kumar",
+      "meta": {
+        "workLogId": "WLOG-82d119de",
+        "userId": "USR-EMP-001",
+        "status": "at_risk"
+      },
+      "actor": "system",
+      "createdAt": "2026-05-03T09:17:32.177Z"
+    },
+    {
+      "id": "AUD-b5eceeb1",
+      "action": "assessment.created",
+      "message": "Assessment recorded for Wage floor and payroll traceability",
+      "meta": {
+        "controlId": "CTL-001",
+        "assessmentId": "ASM-eb0f7a4c",
+        "status": "watch"
+      },
+      "actor": "system",
+      "createdAt": "2026-05-03T09:15:27.165Z"
+    },
+    {
+      "id": "AUD-157e247b",
+      "action": "worklog.created",
+      "message": "Work log recorded for Meera Iyer",
+      "meta": {
+        "workLogId": "WLOG-c6768a54",
+        "userId": "USR-EMP-002",
+        "status": "at_risk"
+      },
+      "actor": "system",
+      "createdAt": "2026-05-02T09:58:47.783Z"
+    },
     {
       "id": "AUD-3001",
       "action": "program.seeded",
