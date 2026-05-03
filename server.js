@@ -353,7 +353,7 @@ async function serveStatic(req, res, pathname) {
   }
 }
 
-const server = http.createServer(async (req, res) => {
+async function requestHandler(req, res) {
   try {
     const url = new URL(req.url, `http://${req.headers.host || "localhost"}`);
     if (url.pathname.startsWith("/api/")) {
@@ -365,15 +365,25 @@ const server = http.createServer(async (req, res) => {
   } catch (error) {
     sendError(res, error);
   }
-});
+}
 
-ensureDb()
-  .then(() => {
-    server.listen(PORT, () => {
-      console.log(`Labour Law Compliance app running at http://localhost:${PORT}`);
-    });
-  })
-  .catch((error) => {
+const server = http.createServer(requestHandler);
+
+async function startServer() {
+  await ensureDb();
+  server.listen(PORT, () => {
+    console.log(`Labour Law Compliance app running at http://localhost:${PORT}`);
+  });
+}
+
+if (require.main === module) {
+  startServer().catch((error) => {
     console.error("Failed to prepare application data", error);
     process.exit(1);
   });
+}
+
+module.exports = {
+  requestHandler,
+  startServer,
+};

@@ -22,6 +22,8 @@ The included controls are configurable examples. They are not legal advice and s
 .
 |-- data/
 |   `-- db.json
+|-- api/
+|   `-- index.mjs
 |-- public/
 |   |-- app.js
 |   |-- dashboard.html
@@ -37,7 +39,8 @@ The included controls are configurable examples. They are not legal advice and s
 |-- tests/
 |   `-- complianceEngine.test.js
 |-- package.json
-`-- server.js
+|-- server.js
+`-- vercel.json
 ```
 
 ## Run Locally
@@ -74,6 +77,18 @@ Password: Compliance@2026
 ```bash
 npm test
 ```
+
+## Deploy On Vercel
+
+This repo includes a Vercel function wrapper in `api/index.mjs` and a catch-all rewrite in `vercel.json`, so the same Node backend handles `/api/*`, `/login`, `/app`, and static assets after deployment.
+
+Recommended Vercel environment variable:
+
+```text
+SESSION_SECRET=use-a-long-random-secret
+```
+
+The bundled `data/db.json` works for demo login accounts. Local development writes changes to `data/db.json`; Vercel deployments can only keep new signup/work-log writes in warm function memory, so use MongoDB, MySQL, Postgres, or another hosted database for durable production data.
 
 ## API
 

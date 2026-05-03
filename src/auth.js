@@ -2,7 +2,7 @@ const crypto = require("crypto");
 
 const SESSION_COOKIE = "lc_session";
 const SESSION_TTL_MS = 8 * 60 * 60 * 1000;
-const sessions = new Map();
+const DEFAULT_SESSION_SECRET = "slcs-local-demo-session-secret";
 
 function inputError(message, statusCode = 400) {
   const error = new Error(message);
@@ -22,7 +22,11 @@ function parseCookies(cookieHeader = "") {
       }
       const key = pair.slice(0, separatorIndex);
       const value = pair.slice(separatorIndex + 1);
-      cookies[key] = decodeURIComponent(value);
+      try {
+        cookies[key] = decodeURIComponent(value);
+      } catch {
+        cookies[key] = value;
+      }
       return cookies;
     }, {});
 }
@@ -38,6 +42,22 @@ function safeEqual(left, right) {
     return false;
   }
   return crypto.timingSafeEqual(leftBuffer, rightBuffer);
+}
+
+function sessionSecret() {
+  return process.env.SESSION_SECRET || DEFAULT_SESSION_SECRET;
+}
+
+function signSessionPayload(payload) {
+  return crypto.createHmac("sha256", sessionSecret()).update(payload).digest("base64url");
+}
+
+function encodeSessionPayload(payload) {
+  return Buffer.from(JSON.stringify(payload), "utf8").toString("base64url");
+}
+
+function decodeSessionPayload(payload) {
+  return JSON.parse(Buffer.from(payload, "base64url").toString("utf8"));
 }
 
 function makeUserId() {
@@ -128,9 +148,9 @@ function createUser(db, payload) {
 }
 
 function createSession(user) {
-  const sessionId = crypto.randomBytes(32).toString("hex");
   const expiresAt = Date.now() + SESSION_TTL_MS;
-  sessions.set(sessionId, { user, expiresAt });
+  const payload = encodeSessionPayload({ user: publicUser(user), expiresAt });
+  const sessionId = `${payload}.${signSessionPayload(payload)}`;
   return { sessionId, expiresAt };
 }
 
@@ -141,13 +161,19 @@ function getSession(req) {
     return null;
   }
 
-  const session = sessions.get(sessionId);
-  if (!session) {
+  const [payload, signature] = sessionId.split(".");
+  if (!payload || !signature || !safeEqual(signature, signSessionPayload(payload))) {
     return null;
   }
 
-  if (session.expiresAt < Date.now()) {
-    sessions.delete(sessionId);
+  let session;
+  try {
+    session = decodeSessionPayload(payload);
+  } catch {
+    return null;
+  }
+
+  if (!session.user || !session.expiresAt || session.expiresAt < Date.now()) {
     return null;
   }
 
@@ -163,10 +189,7 @@ function requireSession(req) {
 }
 
 function clearSession(req) {
-  const session = getSession(req);
-  if (session) {
-    sessions.delete(session.id);
-  }
+  getSession(req);
 }
 
 function sessionCookie(sessionId, expiresAt) {

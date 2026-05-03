@@ -14,6 +14,8 @@ const {
   authenticateUser,
   createUser,
   createSession,
+  getSession,
+  sessionCookie,
 } = require("../src/auth");
 
 function sampleDb() {
@@ -240,7 +242,8 @@ test("authentication validates the seeded demo user", () => {
   const session = createSession(user);
 
   assert.equal(user.role, "Compliance Administrator");
-  assert.match(session.sessionId, /^[a-f0-9]{64}$/);
+  assert.match(session.sessionId, /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/);
+  assert.equal(getSession({ headers: { cookie: sessionCookie(session.sessionId, session.expiresAt) } }).user.email, user.email);
 });
 
 test("signup requires matching confirmed password", () => {
