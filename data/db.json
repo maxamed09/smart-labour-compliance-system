@@ -108,6 +108,60 @@
         "minimumHourlyWage": 178
       },
       "createdAt": "2026-05-03T09:40:59.038Z"
+    },
+    {
+      "id": "USR-CF6E0580",
+      "name": "haashi",
+      "email": "haashi@gmail.com",
+      "role": "employer",
+      "passwordSalt": "32fe8be898ed1a96008e3cf605cac529",
+      "passwordHash": "4e7eff23d1cbed277c3ce521d0f2438d4769259317fd686b60ef0fa94c6c4163",
+      "profile": {
+        "department": "People Operations",
+        "site": "All sites"
+      },
+      "createdAt": "2026-05-03T10:08:23.397Z"
+    },
+    {
+      "id": "USR-21908648",
+      "name": "haashi",
+      "email": "haashi1@gmail.com",
+      "role": "employee",
+      "passwordSalt": "673f2bae66ce273bb7a310b57aff90ae",
+      "passwordHash": "9aeffd9b8beab64adfc13543928de21727edbdc4af2c83d326a133534a658989",
+      "profile": {
+        "department": "Unassigned",
+        "site": "Primary site",
+        "hourlyRate": 178,
+        "minimumHourlyWage": 178
+      },
+      "createdAt": "2026-05-03T10:11:24.595Z"
+    },
+    {
+      "id": "USR-185603A0",
+      "name": "mohamed",
+      "email": "mohamed@gmail.com",
+      "role": "employer",
+      "passwordSalt": "8e46795384768cef8bfcd04facac1c15",
+      "passwordHash": "c36e849ce8b8e5235d5856c62f2136fcbfe5473834b67ec35613172e1346b02d",
+      "profile": {
+        "department": "People Operations",
+        "site": "All sites"
+      },
+      "createdAt": "2026-05-03T10:12:10.838Z"
+    },
+    {
+      "id": "USR-BE60FC1F",
+      "name": "Maxamed Xasan",
+      "email": "maxamed@gamil.com",
+      "role": "employer",
+      "passwordSalt": "325887accb722476a4544df353fff665",
+      "passwordHash": "94f933d92f18fdea1393af8d8f0182a448358c403aad069b1dc21b3e80ab70ae",
+      "profile": {
+        "department": "People Operations",
+        "site": "All sites"
+      },
+      "createdAt": "2026-05-03T10:13:36.372Z"
     }
   ],
   "workforce": {

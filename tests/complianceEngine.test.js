@@ -265,3 +265,23 @@ test("signup requires matching confirmed password", () => {
   assert.equal(user.email, "new.worker@example.com");
   assert.equal(user.role, "employee");
 });
+
+test("signup rejects duplicate email addresses", () => {
+  const db = sampleDb();
+
+  createUser(db, {
+    name: "New Worker",
+    email: "duplicate.worker@example.com",
+    role: "employee",
+    password: "Password@2026",
+    confirmPassword: "Password@2026"
+  });
+
+  assert.throws(() => createUser(db, {
+    name: "Duplicate Worker",
+    email: "duplicate.worker@example.com",
+    role: "employee",
+    password: "Password@2026",
+    confirmPassword: "Password@2026"
+  }), /already exists/);
+});

@@ -14,9 +14,14 @@ async function readDb() {
 }
 
 async function writeDb(db) {
-  const tempPath = `${DB_PATH}.tmp`;
-  await fs.writeFile(tempPath, `${JSON.stringify(db, null, 2)}\n`, "utf8");
-  await fs.rename(tempPath, DB_PATH);
+  const tempPath = `${DB_PATH}.${process.pid}.${Date.now()}.tmp`;
+  try {
+    await fs.writeFile(tempPath, `${JSON.stringify(db, null, 2)}\n`, "utf8");
+    await fs.rename(tempPath, DB_PATH);
+  } catch (error) {
+    await fs.rm(tempPath, { force: true }).catch(() => {});
+    throw error;
+  }
 }
 
 module.exports = {

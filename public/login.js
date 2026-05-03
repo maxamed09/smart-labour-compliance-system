@@ -38,6 +38,14 @@ function setSignupMessage(message, tone = "muted") {
   signupMessage.dataset.tone = tone;
 }
 
+async function readJsonResponse(response) {
+  try {
+    return await response.json();
+  } catch {
+    return { error: "Server returned an unreadable response" };
+  }
+}
+
 loginForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   loginButton.disabled = true;
@@ -54,7 +62,7 @@ loginForm.addEventListener("submit", async (event) => {
       },
       body: JSON.stringify(payload),
     });
-    const result = await response.json();
+    const result = await readJsonResponse(response);
 
     if (!response.ok) {
       throw new Error(result.error || "Login failed");
@@ -90,9 +98,15 @@ signupForm.addEventListener("submit", async (event) => {
       },
       body: JSON.stringify(payload),
     });
-    const result = await response.json();
+    const result = await readJsonResponse(response);
 
     if (!response.ok) {
+      if (response.status === 409) {
+        throw new Error("This email already has an account. Log in or use a different email.");
+      }
+      if (response.status >= 500) {
+        throw new Error("Registration could not be saved. Refresh the page and try again.");
+      }
       throw new Error(result.error || "Signup failed");
     }
 
